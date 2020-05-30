@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-class EncryptionDecryption {
+class Application implements Runnable {
     private int key = 0;
     private String data = "";
     private String in = null;
@@ -14,7 +14,7 @@ class EncryptionDecryption {
     private EncryptionAlgorithm algorithm = null;
     private String message;
 
-    EncryptionDecryption(String... args) {
+    Application(String... args) {
         for (int i = 0; i < args.length - 1; ++i) {
             final var option = args[i];
             if (option.charAt(0) != '-') {
@@ -40,7 +40,7 @@ class EncryptionDecryption {
                     in = value;
                     break;
                 case "-out":
-                    out =  value;
+                    out = value;
                     break;
                 case "-data":
                     data = value;
@@ -49,6 +49,13 @@ class EncryptionDecryption {
         if (algorithm == null) {
             algorithm = new ShiftAlgorithm();
         }
+    }
+
+    @Override
+    public void run() {
+        read();
+        process();
+        write();
     }
 
     void process() {
@@ -80,4 +87,5 @@ class EncryptionDecryption {
             System.out.println(message);
         }
     }
+
 }
