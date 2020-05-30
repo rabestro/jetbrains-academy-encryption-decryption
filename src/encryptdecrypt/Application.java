@@ -1,91 +1,53 @@
 package encryptdecrypt;
 
-import java.io.FileWriter;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import static java.util.Objects.*;
+
 class Application implements Runnable {
-    private int key = 0;
-    private String data = "";
-    private String in = null;
-    private String mode = "enc";
-    private String out = null;
-    private EncryptionAlgorithm algorithm = null;
-    private String message;
+    private final Configuration config;
 
-    Application(String... args) {
-        for (int i = 0; i < args.length - 1; ++i) {
-            final var option = args[i];
-            if (option.charAt(0) != '-') {
-                continue;
-            }
-            final var value = args[++i];
-
-            switch (option) {
-                case "-alg":
-                    algorithm = EncryptionAlgorithm.getInstance(value);
-                    break;
-                case "-mode":
-                    mode = value;
-                    break;
-                case "-key":
-                    try {
-                        key = Integer.parseInt(value);
-                    } catch (NumberFormatException e) {
-                        key = 0;
-                    }
-                    break;
-                case "-in":
-                    in = value;
-                    break;
-                case "-out":
-                    out = value;
-                    break;
-                case "-data":
-                    data = value;
-            }
-        }
-        if (algorithm == null) {
-            algorithm = new ShiftAlgorithm();
-        }
+    Application(final Configuration config) {
+        this.config = config;
     }
 
     @Override
     public void run() {
-        read();
-        process();
-        write();
+        final var algorithm = config.getAlgorithm();
+        final var key = config.getKey();
+        final var data = requireNonNullElseGet(config.getData(), this::readData);
+
+        final var message = config.isEncoding()
+                ? algorithm.encode(key, data)
+                : algorithm.decode(key, data);
+
+        writeData(message);
     }
 
-    private void process() {
-        if ("enc".equals(mode)) {
-            message = algorithm.encode(key, data);
-        } else {
-            message = algorithm.decode(key, data);
+    private String readData() {
+        try {
+            return new String(Files.readAllBytes(Paths.get(
+                    requireNonNull(config.getInputFileName(),
+                            "Neither data or input file is specified."))));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        return null;
     }
 
-    private void read() {
-        if (data.isEmpty() && in != null) {
+    private void writeData(final String message) {
+        if (nonNull(config.getOutputFileName())) {
             try {
-                data = new String(Files.readAllBytes(Paths.get(in)));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void write() {
-        if (out != null) {
-            try (final var writer = new FileWriter(out)) {
-                writer.write(message);
-            } catch (IOException e) {
+                new PrintStream(config.getOutputFileName()).println(message);
+            } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         } else {
             System.out.println(message);
         }
     }
-
 }
