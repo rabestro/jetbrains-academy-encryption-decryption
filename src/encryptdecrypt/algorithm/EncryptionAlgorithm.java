@@ -1,12 +1,12 @@
 package encryptdecrypt.algorithm;
 
 public interface EncryptionAlgorithm {
-    String ALGORITHM_CEASAR = "shift";
+    String ALGORITHM_SHIFT = "shift";
     String ALGORITHM_UNICODE = "unicode";
 
     static EncryptionAlgorithm getInstance(String type) {
         switch (type) {
-            case ALGORITHM_CEASAR:
+            case ALGORITHM_SHIFT:
                 return new ShiftAlgorithm();
             case ALGORITHM_UNICODE:
                 return new UnicodeAlgorithm();
