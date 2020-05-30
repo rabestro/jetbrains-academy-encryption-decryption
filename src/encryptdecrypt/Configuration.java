@@ -1,9 +1,5 @@
 package encryptdecrypt;
 
-import encryptdecrypt.algorithm.EncryptionAlgorithm;
-import encryptdecrypt.algorithm.EncryptionMode;
-import encryptdecrypt.algorithm.ShiftAlgorithm;
-
 import static java.util.Objects.*;
 
 public class Configuration {

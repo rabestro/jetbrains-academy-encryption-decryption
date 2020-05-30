@@ -1,4 +1,4 @@
-package encryptdecrypt.algorithm;
+package encryptdecrypt;
 
 import static java.lang.Character.isAlphabetic;
 import static java.lang.Character.isUpperCase;

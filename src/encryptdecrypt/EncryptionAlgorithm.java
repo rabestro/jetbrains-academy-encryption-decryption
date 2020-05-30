@@ -1,4 +1,4 @@
-package encryptdecrypt.algorithm;
+package encryptdecrypt;
 
 public interface EncryptionAlgorithm {
     String ALGORITHM_SHIFT = "shift";
