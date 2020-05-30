@@ -1,13 +1,23 @@
 package encryptdecrypt;
 
+import encryptdecrypt.algorithm.EncryptionAlgorithm;
+import encryptdecrypt.algorithm.ShiftAlgorithm;
+
 import static java.util.Objects.*;
 
 public class Configuration {
+    private static final String OPTION_ALGORITHM = "-alg";
+    private static final String OPTION_MODE = "-mode";
+    private static final String OPTION_KEY = "-key";
+    private static final String OPTION_INPUT_FILE = "-in";
+    private static final String OPTION_OUTPUT_FILE = "-out";
+    private static final String OPTION_DATA = "-data";
+
     private int key;
     private String data;
-    private String mode;
     private String inputFileName;
     private String outputFileName;
+    private EncryptionMode mode;
     private EncryptionAlgorithm algorithm;
 
     Configuration(String... args) {
@@ -19,8 +29,8 @@ public class Configuration {
         }
     }
 
-    public String getMode() {
-        return requireNonNullElse(mode, "enc");
+    public EncryptionMode getMode() {
+        return requireNonNullElse(mode, EncryptionMode.ENC);
     }
 
     public EncryptionAlgorithm getAlgorithm() {
@@ -43,28 +53,28 @@ public class Configuration {
         return inputFileName;
     }
 
-    public boolean isEncoding() {
-        return "enc".equals(getMode());
+    public boolean isEncode() {
+        return getMode() == EncryptionMode.ENC;
     }
 
     private void setOption(final String option, final String value) {
         switch (option) {
-            case "-alg":
+            case OPTION_ALGORITHM:
                 algorithm = EncryptionAlgorithm.getInstance(value);
                 break;
-            case "-mode":
-                mode = value;
+            case OPTION_MODE:
+                mode = EncryptionMode.valueOf(value.toUpperCase());
                 break;
-            case "-key":
+            case OPTION_KEY:
                 key = Integer.parseInt(value);
                 break;
-            case "-in":
+            case OPTION_INPUT_FILE:
                 inputFileName = value;
                 break;
-            case "-out":
+            case OPTION_OUTPUT_FILE:
                 outputFileName = value;
                 break;
-            case "-data":
+            case OPTION_DATA:
                 data = value;
             default:
                 throw new IllegalArgumentException("Illegal option: " + option);

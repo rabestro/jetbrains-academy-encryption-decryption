@@ -1,15 +1,17 @@
-package encryptdecrypt;
+package encryptdecrypt.algorithm;
 
 public interface EncryptionAlgorithm {
+    String ALGORITHM_CEASAR = "shift";
+    String ALGORITHM_UNICODE = "unicode";
 
     static EncryptionAlgorithm getInstance(String type) {
         switch (type) {
-            case "shift":
+            case ALGORITHM_CEASAR:
                 return new ShiftAlgorithm();
-            case "unicode":
+            case ALGORITHM_UNICODE:
                 return new UnicodeAlgorithm();
             default:
-                return null;
+                throw new IllegalArgumentException("Unrecognized algorithm.");
         }
     }
 

@@ -21,7 +21,7 @@ class Application implements Runnable {
         final var key = config.getKey();
         final var data = requireNonNullElseGet(config.getData(), this::readData);
 
-        final var message = config.isEncoding()
+        final var message = config.isEncode()
                 ? algorithm.encode(key, data)
                 : algorithm.decode(key, data);
 
