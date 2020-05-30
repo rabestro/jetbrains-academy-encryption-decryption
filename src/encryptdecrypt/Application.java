@@ -58,7 +58,7 @@ class Application implements Runnable {
         write();
     }
 
-    void process() {
+    private void process() {
         if ("enc".equals(mode)) {
             message = algorithm.encode(key, data);
         } else {
@@ -66,7 +66,7 @@ class Application implements Runnable {
         }
     }
 
-    void read() {
+    private void read() {
         if (data.isEmpty() && in != null) {
             try {
                 data = new String(Files.readAllBytes(Paths.get(in)));
@@ -76,7 +76,7 @@ class Application implements Runnable {
         }
     }
 
-    void write() {
+    private void write() {
         if (out != null) {
             try (final var writer = new FileWriter(out)) {
                 writer.write(message);
