@@ -29,10 +29,11 @@ class Application implements Runnable {
     }
 
     private String readData() {
+        final var fileName = requireNonNull(
+                config.getInputFileName(),
+                "Neither data or input file is specified.");
         try {
-            return new String(Files.readAllBytes(Paths.get(
-                    requireNonNull(config.getInputFileName(),
-                            "Neither data or input file is specified."))));
+            return new String(Files.readAllBytes(Paths.get(fileName)));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -41,8 +42,8 @@ class Application implements Runnable {
 
     private void writeData(final String message) {
         if (nonNull(config.getOutputFileName())) {
-            try {
-                new PrintStream(config.getOutputFileName()).println(message);
+            try (final var out = new PrintStream(config.getOutputFileName())) {
+                out.println(message);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -50,4 +51,5 @@ class Application implements Runnable {
             System.out.println(message);
         }
     }
+
 }
