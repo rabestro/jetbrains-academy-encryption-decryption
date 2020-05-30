@@ -1,4 +1,4 @@
-package encryptdecrypt;
+package encryptdecrypt.algorithm;
 
 public enum EncryptionMode {
     ENC, DEC
